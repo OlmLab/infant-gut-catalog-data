@@ -1,0 +1,298 @@
+{
+ "build_date": "2026-09-26",
+ "check_rule": "every file in the package directory with extension in ('.parquet', '.csv', '.csv.gz', '.json', '.ipynb', '.md') must be listed here (unlisted files fail the check)",
+ "generator_git_sha": "nogit",
+ "generator_repo": "OlmLab/catalog-pipeline",
+ "package_version": "1.2.2",
+ "previous_version": "1.2.0",
+ "release_tag": "data-v1.2.2",
+ "tables": {
+  "AUTHORS_REPORT.md": {
+   "bytes": 8768,
+   "sha256": "7c377d8e86c4bdcf64af4375e45dbedb8e6470f264bb1b2f2208191b2d3d6b6f",
+   "size_bytes": 8768
+  },
+  "CHANGELOG.md": {
+   "bytes": 9319,
+   "sha256": "e43037c7f3cdef335bde259f1d8ef3be06e0a987eb9b805ffa6bccd6fee94954",
+   "size_bytes": 10026
+  },
+  "DATAFIX_REPORT.md": {
+   "bytes": 13454,
+   "sha256": "2d672bf1a0d23b2eec96684b2afeae38da5e0989c4b163c2a6342818b09ec74b",
+   "size_bytes": 13454
+  },
+  "DATA_DICTIONARY.md": {
+   "bytes": 56162,
+   "sha256": "e86ad3fd3e1ea3da56071d8118a350dfc7f0b630d1b081e8ab32fec79dcca220",
+   "size_bytes": 56162
+  },
+  "DATA_MODEL_FIX_REPORT.md": {
+   "bytes": 14671,
+   "sha256": "49c3f393a8aa31d9fc73b9e27e92fb5e78a94c3f656db1c4acfde18a1c0959dd",
+   "size_bytes": 14671
+  },
+  "EXTRACTION_REPORT.md": {
+   "bytes": 15154,
+   "sha256": "0cae3f1fa85d9cd78b33555d1a130c71dcc256116aab2614db405326a50ebdd1",
+   "size_bytes": 15154
+  },
+  "README.md": {
+   "bytes": 13051,
+   "sha256": "cbbcfb6da06c2a38b34f00b08d2666296bbe89f3b636567983abc96fb3cd7fc7",
+   "size_bytes": 13051
+  },
+  "SANDPIPER_REPORT.md": {
+   "bytes": 20985,
+   "sha256": "c55153a677b557c81feef32ce1efe9601a1e0f69b8f1ca91c98d7b51fbf350b8",
+   "size_bytes": 20985
+  },
+  "authors.parquet": {
+   "bytes": 755443,
+   "rows": 28367,
+   "sha256": "f67b98b1ab3e913f8fece267ddb3fecbc31f5ab78eb0fcee013c238455ade231",
+   "size_bytes": 755443
+  },
+  "authors_index.json": {
+   "bytes": 6789607,
+   "sha256": "dd56bbd8d6cde8557c6dc62da46ce7510ba81cefbc6544510c7b445b9c5e64d9",
+   "size_bytes": 6789607
+  },
+  "build_counts.json": {
+   "bytes": 742,
+   "sha256": "085d41e337432cda1786bac74fb71eef45df7d7a7b90bcb3f167149e416f3965",
+   "size_bytes": 742
+  },
+  "cohorts.csv": {
+   "bytes": 166542,
+   "rows": 373,
+   "sha256": "5875a9db494fef6bbefca40da58ed056980d920e8bb7fc2cfeb62c4a2222088d",
+   "size_bytes": 166542
+  },
+  "confidence_tiers.csv": {
+   "bytes": 4277,
+   "rows": 29,
+   "sha256": "7ba8d0415b266ab591897f8e08d20757266ba4aae64e821e6f52dd720f4c4025",
+   "size_bytes": 4277
+  },
+  "extraction_gold_eval_hires.csv": {
+   "bytes": 326,
+   "rows": 6,
+   "sha256": "d1b17b3070635511f9c9ec9cc3652c920ae488b7e857aa1e85f84f1d4c153740",
+   "size_bytes": 326
+  },
+  "field_coverage_summary.csv": {
+   "bytes": 1504,
+   "rows": 19,
+   "sha256": "ce801bcea775bd007c9baa7361107666a6a7e44fde28f377ceb8e0654635f14a",
+   "size_bytes": 1504
+  },
+  "getting_started.ipynb": {
+   "bytes": 50466,
+   "sha256": "3d19897cdfd9c4467e9be917f4a307fc4bf395076bf550f45b175cc534d96b08",
+   "size_bytes": 50466
+  },
+  "human_review_queue.csv": {
+   "bytes": 50116,
+   "rows": 52,
+   "sha256": "dae9b6d4e63db9963c6e759323042a97591834922e0566bb901d7c184f4e2662",
+   "size_bytes": 50116
+  },
+  "organisations.parquet": {
+   "bytes": 449919,
+   "rows": 18888,
+   "sha256": "e1469af4a90a13327d6cce4c390c1a13cde9b1a9ca252c2991b85cc01634be6c",
+   "size_bytes": 449919
+  },
+  "organisations_index.json": {
+   "bytes": 894406,
+   "sha256": "9f6ad0e220908fa13fe73816e816a47d8fdb59b695529da0c82d40328ae93e14",
+   "size_bytes": 894406
+  },
+  "parent_biosamples.parquet": {
+   "bytes": 63874,
+   "rows": 16,
+   "sha256": "305cac7718d87e9d29768755db8a3b986a6fde05b4ce8f8c8811dafe1fad2b5f",
+   "size_bytes": 63874
+  },
+  "review_amplicon_runs.csv": {
+   "bytes": 4791,
+   "rows": 39,
+   "sha256": "63ad163889168f009d45e150ee367cd8c43b681070d28b5a36b8b7bfdf7c7d1b",
+   "size_bytes": 4791
+  },
+  "review_genomic_only_samples.csv": {
+   "bytes": 389492,
+   "rows": 3158,
+   "sha256": "4e61acf46b7b87ab0a28ae3bf9797e7c0187c2a693843193929c036ace624e34",
+   "size_bytes": 389492
+  },
+  "review_named_microbe_metagenomic_samples.csv": {
+   "bytes": 11269,
+   "rows": 70,
+   "sha256": "99d300ef799a6d0a631c0bdc687b2bedc83bdbcb5979f58a20e1510e23225fdd",
+   "size_bytes": 11269
+  },
+  "runs.parquet": {
+   "bytes": 8809898,
+   "rows": 174022,
+   "sha256": "079c43dc9d17b5f1e9a9197dfd16490f14ceb159c7b42eb5732fb0edd845740b",
+   "size_bytes": 8809898
+  },
+  "sample_determinations.parquet": {
+   "bytes": 7137909,
+   "rows": 618898,
+   "sha256": "91a6b71e263217b19d41ac8a04a312e685c24958fa111c47afa9dea6f223e49d",
+   "size_bytes": 7137909
+  },
+  "sample_determinations_superseded.parquet": {
+   "bytes": 17804,
+   "rows": 223,
+   "sha256": "35e5f093c459667d14f793ed225ef7c69facf260301864a456b98214990d8c73",
+   "size_bytes": 17804
+  },
+  "sample_metadata_wide.csv.gz": {
+   "bytes": 11776552,
+   "sha256": "1e862bfefc07df18436bf67f23264cbcbe16af37629ecdb2f994503e1e61c786",
+   "size_bytes": 11776552
+  },
+  "sample_metadata_wide.parquet": {
+   "bytes": 17072405,
+   "rows": 154206,
+   "sha256": "9f8029d9124f61158e2ec7ea61cfb34b235471f925d7d388cf9f2a1935fe5cf2",
+   "size_bytes": 17073201
+  },
+  "sample_subjects.parquet": {
+   "bytes": 2895669,
+   "rows": 154206,
+   "sha256": "759e11828dd976aa23202c705fc2486aaf73f5da62af9ed687949d7b9b377b40",
+   "size_bytes": 2895669
+  },
+  "sample_unit_classification.csv": {
+   "bytes": 2068790,
+   "rows": 11116,
+   "sha256": "da7e51879682f47863245e715d36d1e3a65521b1b1f1290a1eb9cf509b99e502",
+   "size_bytes": 2068790
+  },
+  "sample_unit_classification_by_study.csv": {
+   "bytes": 7051,
+   "rows": 67,
+   "sha256": "a3c1007cd305266d526a6be5b0279900d58045955dd7bf12181f09b88940456f",
+   "size_bytes": 7051
+  },
+  "sandpiper_auditor_candidate_runs.csv": {
+   "bytes": 50826,
+   "rows": 375,
+   "sha256": "72ece46b6e0306fc72c0fafeb6be5604388a260fea8a5175c9c686a388fdfcc9",
+   "size_bytes": 50826
+  },
+  "sandpiper_flag_definitions.json": {
+   "bytes": 5591,
+   "sha256": "fc1036563afd682a70091a5139e1dd98feaed8e63d6aad8ee1a0a1f1727a89da",
+   "size_bytes": 5591
+  },
+  "sandpiper_flag_table.csv": {
+   "bytes": 4066,
+   "rows": 20,
+   "sha256": "d3a84f7a27e79bb802190416135722f7fad8441c5b96df69bcaaad18501537ba",
+   "size_bytes": 4066
+  },
+  "sandpiper_run_qc.parquet": {
+   "bytes": 9031460,
+   "rows": 174022,
+   "sha256": "f1cdb7d605f34d2c7803b41e81b9f56489f5c3682c5354044b9b1b54fcd2f3d9",
+   "size_bytes": 9031460
+  },
+  "sandpiper_sample_summary.parquet": {
+   "bytes": 10473133,
+   "rows": 79473,
+   "sha256": "f09475085074b2faf5a5c2bc274ae813be17f2d97a43d2bc36fa1840db93d6f4",
+   "size_bytes": 10473133
+  },
+  "sandpiper_study_coverage.csv": {
+   "bytes": 81828,
+   "rows": 389,
+   "sha256": "9383044f13ebbd696f0e4eede33610e2b16252513adfe812808f3d49555f95e2",
+   "size_bytes": 81828
+  },
+  "sandpiper_study_panel_status.csv": {
+   "bytes": 27851,
+   "rows": 389,
+   "sha256": "31b895ba054a3d8c095076a992bd9ab6f6ab43bcf1f560c5bd9a83c28ae00499",
+   "size_bytes": 27852
+  },
+  "sandpiper_study_panels.parquet": {
+   "bytes": 72917,
+   "rows": 4637,
+   "sha256": "d63db0520ad50f5b718fd19d3afb86f3a887e8386b14b8bd4b8a107a9b649af3",
+   "size_bytes": 73158
+  },
+  "sandpiper_study_qc_flags.csv": {
+   "bytes": 76248,
+   "rows": 389,
+   "sha256": "39139fc13ac784616aff850b0cb0234b9093e2d300b792cdd7db88c8132e7fef",
+   "size_bytes": 76248
+  },
+  "sandpiper_top_genera.parquet": {
+   "bytes": 4840847,
+   "rows": 1049958,
+   "sha256": "ececa62769f10ef10e7046f926dda9f91aefe3df2beed4f17e492fbf23113232",
+   "size_bytes": 4840847
+  },
+  "study_authors_summary.csv": {
+   "bytes": 987036,
+   "rows": 9579,
+   "sha256": "b5eeec618b6c9a685ae034de48b395bf6b62d3999adb77ee5f5acaa9831a1dc5",
+   "size_bytes": 987036
+  },
+  "study_field_coverage_matrix.csv": {
+   "bytes": 33017,
+   "rows": 371,
+   "sha256": "028221d65d8db250e89bc8b95ca15f58f7bd96952fe1a364ef3877aa938739d9",
+   "size_bytes": 33017
+  },
+  "study_metadata_wide.csv": {
+   "bytes": 485682,
+   "rows": 389,
+   "sha256": "7766cf45ae3dfd5fdc8bc2c2bd1c676a6d8ac959ba42c56de54d4c06388c9ae4",
+   "size_bytes": 485682
+  },
+  "study_metadata_wide.parquet": {
+   "bytes": 228283,
+   "rows": 389,
+   "sha256": "ddb95348e2bff51a401766cec7e4242a97c70e3bfe6f53dc4ab4773e949f24f3",
+   "size_bytes": 228280
+  },
+  "study_paper_links.csv": {
+   "bytes": 164039,
+   "rows": 973,
+   "sha256": "7e726e98947636df793409c3da7cfff67788b295ee1be47fe33e705c5e86a44d",
+   "size_bytes": 164039
+  },
+  "study_verdict_history.parquet": {
+   "bytes": 1076857,
+   "rows": 32231,
+   "sha256": "4b0dac2eb61555ed705663ea5d52f1bc67db896df827bbbac7d3f725dc401a62",
+   "size_bytes": 1076857
+  },
+  "tier_field_precision.csv": {
+   "bytes": 2590,
+   "rows": 49,
+   "sha256": "74a412eca0beefc873751cdeafba4b73567321e0b7c3116d3d1a442b552a354e",
+   "size_bytes": 2590
+  },
+  "universe_studies_all.parquet": {
+   "bytes": 1104981,
+   "rows": 9579,
+   "sha256": "25fd7f26a8a631599957c7e2a72be8213d07b18e21b503b731060e9825edf965",
+   "size_bytes": 1104981
+  },
+  "value_history.parquet": {
+   "bytes": 576674,
+   "rows": 46587,
+   "sha256": "c7ca0cd2fc6913cedcdfca0e652ae43e3d7ca6986f012bb98a7fd2c7585bbb97",
+   "size_bytes": 582791
+  }
+ },
+ "zip_build": "python zipfile, ZIP_DEFLATED, ZipInfo.date_time = (2026,9,26,0,0,0), external_attr 0o644, entries sorted; byte-identical across rebuilds of identical content"
+}

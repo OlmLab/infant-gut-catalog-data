@@ -1,0 +1,50 @@
+## 1.2.2 — 2026-09-26
+Owner decisions applied (value_history change_stage=owner_decision, 701 rows):
+* PRJEB90577 (PediCAP, 631 peri-rectal swab samples): body_site_class excluded → primary, new column `body_site='rectal_swab'`; catalog_scope 71,795 → 72,358.
+* 70 samples labelled METAGENOMIC whose organism is a named microbe (68 PRJNA799247: Staphylococcus epidermidis/Clostridioides difficile; 2 PRJNA1082298: Enterobacter asburiae) and flagged non-metagenome by Sandpiper: body_site_class → excluded, reason assay_isolate_genome. Studies remain included.
+* `body_site` column added to sample_metadata_wide (currently only 'rectal_swab'; stool is implied by body_site_class=primary otherwise).
+
+# v1.2.1 (2026-09-26) — data fixes from the three final reviews (patch)
+* **F1 / R3-5 organisations.** 6,143 of 18,888 organisation rows tagged `org_type = not_an_organisation` ({'submission_id': 6033, 'lowercase_username': 93, 'placeholder': 9, 'email_or_handle': 8}); for PRJNA studies the NCBI BioProject Organization is preferred over the ENA center_name. `organisations_index.json` 9,886 → 3,747 keys; `study_authors_summary.organisations` rows containing a SUB id 6,042 → 0; studies with a displayable organisation 9,579 → 9,513 (included studies 386/389).
+* **R3-1 GTDB suffix genera.** Genus indicators match `^g__<Name>(_[A-Z]+)?$`: `sp_ra_g_Enterococcus` changed on 19,090 samples (mean 0.0234 → 0.0324), `sp_ra_g_Veillonella` 6,076, `sp_ra_enterobacterales_core` 3,315, `sp_ra_g_Bacteroides` 1,786, `sp_ra_g_Phocaeicola` 590; `gtdb_to_ncbi_note` table in the dictionary.
+* **R3-2 / F3 / F13 panels and medians.** `sandpiper_study_panels.parquet` v2 recomputed from the full profiles over `catalog_scope ∧ sp_profiled ∧ NOT sp_low_depth`: 298 → 181 studies with a panel (118 fall back with `no_catalog_scope_samples`, 2 `no_age_evidenced_profiled_samples`, 3 all low depth); panel n asserted equal to the recomputation from the shipped sample table; merge artefacts `n_samples_x/_y` removed; `sp_median_*` recomputed on the same scope (changed for 182 studies; null with `sp_panel_scope` fallback label for 208).
+* **R3-3 host / isolate rule.** Deterministic sample rule: non-human ENA scientific_name/tax_id (Mus musculus 10090, Gallus gallus 9031) → `body_site_class = excluded`, `exclusion_reason_code = host_nonhuman` (172 rows, PRJEB6921); every run GENOMIC with a named-microbe organism → `assay_isolate_genome` (123 rows: PRJEB6921 103, PRJEB49206 20). 295 validated `value_history` rows (`change_stage = auditor_review:R3-3`). Body-site `excluded` 5,180 → 5,475. Owner lists shipped: `review_genomic_only_samples.csv` (3,158 GENOMIC-only samples), `review_named_microbe_metagenomic_samples.csv` (70: PRJNA799247, PRJNA1082298), `sandpiper_auditor_candidate_runs.csv`.
+* **R3-6 verdict history.** `stage_order` follows a stage ontology (`stage_rank`, `stage_level`); Haiku `yes` → `uncertain` (screen-pass), `no` → `exclude`, `ERROR`/empty → null with `verdict_norm_note`; `is_consolidated` + `consolidated_kind` (20,222 rows). verdict_norm null 3,775 → 176.
+* **R3-7 notebook.** `getting_started.ipynb` rewritten on `age_scope`/`catalog_scope`, coverage cell fixed, Sandpiper cell added, runs joined via `biosample_accession`/`run_accession`; executed (flattened exec, outputs stored) with 0 errors.
+* **R3-8 / F9 / F10 / F19 / R3-13 dictionary.** `sandpiper_run_qc` section with the miss-reason and organism-class vocabularies; `sample_unit` `biosample_pooled` → `run` in `sandpiper_run_qc` and `sandpiper_study_coverage`; body_site_class vocabulary primary/unknown/excluded/linked defined; `catalog_scope` column (71,795 rows) added to the sample table and `n_catalog_scope` to the study table; single-source `sandpiper_flag_table.csv` (GlobDB flags marked unused); complete generated column reference for both wide tables (build fails on an undocumented column); `adult_flagged` footnoted as over-age (includes children); placeholder genera and Bifidobacterium-share denominator documented.
+* **R3-9 flags.** `sp_flag_non_metagenome` derived from `sp_nonmeta_class ∈ {named_nonhuman_host, named_microbe_or_other}` (sample table 1,650 → 365); any-run `sp_nonmeta_class` column added.
+* **R3-11 / R3-12 / F6.** Panel columns renamed (`n_samples_panel`, `n_samples_study`); `sp_coverage_class` defined on sample rows with `sp_coverage_note` for the two cross-study studies; `sp_n_runs_total` filled for every row, `sp_partial` False when unprofiled; `sandpiper_url` = RANDOM-selection run with the highest root coverage (1,324 URLs changed); `sp_frac_samples_profiled` on the single denominator `n_sample_rows`; `shared_biosample_note` for the five BioSample-sharing studies.
+* **R3-14 miss reasons.** Strategy evaluated first: `non_wgs_strategy` 94 → 511 (AMPLICON, Targeted-Capture, WXS — the strategies with zero profiled runs); `unknown_size` for base_count ≤ 0 (2 runs); `review_amplicon_runs.csv` (39 runs, PRJNA61745).
+* **R3-10 / R3-15 authors.** Transliteration before NFKD folding and folded initials (111 rows re-keyed; keys 10,965 → 10,964); 'Frontiers Production Office' → group; `name_needs_check` for 3 no-initials names; homonym statistic recomputed from the table: 1,075 of 8,181 surnames.
+* **F4.** `n_biosamples` = BioSample-unit rows (153,685); `n_run_units` (521) and `n_parent_biosamples` (16) added; card wording in README.
+* **F22.** `cohorts.csv` gains `unique_infants_display` / `unique_infants_display_source`: single-study cohorts (362) take the study display value.
+* **R1-11.** Package zip built with fixed timestamps (2026-09-26 00:00) and no extra attributes; per-file sha256 in VERSION.json; `VERSION.json` regenerated last and lists every file; the zip's own sha256 is in `data_package_v1.2.1.sha256` and the sidecar `VERSION.json` artifact.
+* Counts corrected: study `sp_*` columns are 18 (CHANGELOG v1.2.0 said 16); `study_paper_links.csv` 973 rows (README said 972); AUTHORS_REPORT organisation keys 9,886 → 3,747 displayable.
+
+# CHANGELOG
+
+## v1.2.0 — 2026-09-26 (release v12) — Sandpiper profiles, author index, versioning
+Deterministic changes only; no LLM calls.
+* **Sandpiper (A6, B5, B6, B7).** 79,473 / 154,206 samples profiled (87,125 / 174,022 runs); 38 `sp_*` columns on the sample table, 16 `sp_*` columns on the study table; seven on-site Sandpiper tables; full profiles off-site.
+* **Scope (B13).** `<field>__scope` for the 16 coverage fields.
+* **Authors.** `authors.parquet` (28,367 rows), `study_authors_summary.csv`, `authors_index.json`; `first_author`, `n_authors`, `organisations` on the study table.
+* **Versioning (A7, B11).** `VERSION.json` with per-table sha256 and row counts; README heading carries the semver; all `*.csv.gz` written with gzip mtime 0 so rebuilds are byte-identical.
+* Wide table: 143 columns.
+
+## v1.2 — 2026-09-26 (release v12) — data-model fix after Reviewer B
+Deterministic changes only; no LLM calls. Before/after counts in `DATA_MODEL_FIX_REPORT.md`.
+* **B1 age scope.** New sample columns `age_scope`, `age_scope_basis`, `role_source`; `role` defaults to `unknown` when unevidenced (infant 138,348 → 72,848); new roles `adult`/`child` for out-of-range ages. Study columns `n_age_scope_infant`, `n_<age_scope>` counts, `mixed_age_deposit`. Headline coverage is now reported on age-scope infant samples (74,695), with the body-site denominator (146,631) kept in `field_coverage_summary.csv`.
+* **B2 parent BioSamples.** The 16 `biosample_pooled` rows left the sample table (`parent_biosamples.parquet`); their 97 determinations are in `value_history.parquet`. Sample table 154,222 → 154,206 rows.
+* **B9 adult_age_flag.** Now literally `age_at_collection_days > 1100`: 9,559 out-of-range R1 ages committed as determinations (`parse_note` `out_of_scope_adult | validate_age: …`, `src_track = adult_scope_fix`, all `validate_row`-checked). The 12 samples with a conflicting in-scope age were resolved for the archive attribute (23 in-scope rows superseded: PRJEB14941 maternal-visit dob arithmetic ×16, PRJNA716780 mother rows read as months ×6, PRJNA695570 R1>R2 ×1); 8 adult rows on PRJEB14941 `.infant.` samples rejected (maternal age copied onto infant samples); 125 PRJEB14941 title-parser `birth → 0 d` rows on maternal birth-visit samples superseded (sample_id_pattern). Flag count 9,567 → 9,559.
+* **B10 unique infants.** `n_unique_infants_est` is NaN unless subject evidence exists; new `n_unique_infants_source`, `n_unique_infants_upper`, `n_unique_infants_display`.
+* **B15 identity.** `biosample_accession` (always) and `run_accession` (run units) on every sample row.
+* **B3 history.** `study_verdict_history.parquet` (32,231 rows, 56 stage tables) and `value_history.parquet` (45,591 rows).
+* **B8 confidence.** `confidence_tiers.csv`, `tier_field_precision.csv`, dictionary paragraph "not a calibrated probability".
+* **B14 reconciliation.** Gold recall: 17/22 automated, 18/22 after human review. Age covered: 54,105 body-site-scope samples with age ≤ 1,100 d (v1.1 README 53,802 predates the run-unit fix; site 54,150 counted parent rows and later-superseded values). Multi-run studies: 57 class-C + 6 class-A assessed; the 4 further studies with multi-run BioSamples in the sample table (PRJNA1019702, PRJNA1198101, PRJNA613032, PRJNA613054) share BioSamples with a sibling BioProject (class `X_cross_study_biosample`, `sample_unit_classification_by_study.csv`); the dictionary's "33 technical multi-run studies" was the pre-classification heuristic count and is withdrawn. Study `n_samples`/`n_runs` now come from `runs.parquet` (PRJEB49206: 419/457 → 439/477).
+* Determinations 609,584 − 97 (parent rows) − 23 (superseded conflicting ages) − 125 (superseded title-parser ages) + 9,559 (adult ages) = 618,898.
+
+## v1.1 — 2026-09-25 (release v11)
+Sample-unit fix (run-level rows for 6 one-BioSample-per-infant deposits), auditor findings applied, group-statement audit.
+
+## v1 — 2026-09-25
+First public data package.

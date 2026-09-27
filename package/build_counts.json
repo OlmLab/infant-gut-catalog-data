@@ -1,0 +1,31 @@
+{
+ "n_age_scope_infant": 74695,
+ "n_author_rows": 28367,
+ "n_biosample_units": 153685,
+ "n_body_site_excluded": 4914,
+ "n_catalog_scope": 72358,
+ "n_determinations_all": 620214,
+ "n_determinations_current": 618898,
+ "n_determinations_retired": 1316,
+ "n_parent_biosamples": 16,
+ "n_profiled_samples": 79473,
+ "n_release_added_reconstructed": 13191,
+ "n_releases": 7,
+ "n_run_units": 521,
+ "n_runs": 174022,
+ "n_samples": 154206,
+ "n_studies": 389,
+ "n_study_cols": 120,
+ "n_universe_studies": 9581,
+ "n_value_history": 46587,
+ "n_wide_cols": 148,
+ "n_worklist_fields_rows": 2634,
+ "n_worklist_studies": 439,
+ "package_version": "1.4.0",
+ "release_added_counts": {
+  "1.0.0": 605707,
+  "1.1.0": 3632,
+  "1.2.0": 9559
+ },
+ "release_id": "R2026.2"
+}

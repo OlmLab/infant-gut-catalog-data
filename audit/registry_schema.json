@@ -1,0 +1,1205 @@
+{
+ "schema_version": 1,
+ "title": "Registry tier tables of the human shotgun-metagenome catalog (SCALE_UP_PLAN §2.2; docs/EXPANSION.md)",
+ "frozen": "2026-09-27",
+ "vocabularies": {
+  "body_sites": "config/vocab/body_sites.yaml",
+  "life_stages": "config/vocab/life_stages.yaml",
+  "assay": "config/vocab/assay.yaml",
+  "population_flags": "config/vocab/population_flags.yaml",
+  "scopes": "config/scope.yaml#scopes[].id"
+ },
+ "evidence_row": {
+  "source": "labelled source (study.title | study.description | sample.title | sample.attr.<key> | run.<field> | external_curation.<source>)",
+  "quote": "≤ 12 words copied from that field"
+ },
+ "tables": {
+  "registry_studies.parquet": {
+   "key": [
+    "study_accession"
+   ],
+   "one_row_per": "ENA study in the registry universe",
+   "columns": [
+    {
+     "name": "study_accession",
+     "type": "string",
+     "description": "ENA/INSDC BioProject accession (PRJ…); primary key",
+     "key": true
+    },
+    {
+     "name": "secondary_study_accession",
+     "type": "string",
+     "description": "ENA secondary study accession (ERP/SRP/DRP)"
+    },
+    {
+     "name": "study_title",
+     "type": "string",
+     "description": "ENA study title"
+    },
+    {
+     "name": "description_short",
+     "type": "string",
+     "description": "ENA study description truncated to 300 characters",
+     "max_length": 300
+    },
+    {
+     "name": "center_name",
+     "type": "string",
+     "description": "Submitting centre"
+    },
+    {
+     "name": "first_public_min",
+     "type": "string",
+     "description": "Earliest run first_public date (ISO)"
+    },
+    {
+     "name": "first_public_max",
+     "type": "string",
+     "description": "Latest run first_public date (ISO)"
+    },
+    {
+     "name": "n_runs",
+     "type": "int64",
+     "description": "Runs in the registry universe for this study"
+    },
+    {
+     "name": "n_samples",
+     "type": "int64",
+     "description": "Distinct sample_accession values"
+    },
+    {
+     "name": "n_biosamples",
+     "type": "int64",
+     "description": "Distinct BioSample accessions"
+    },
+    {
+     "name": "n_runs_sandpiper",
+     "type": "int64",
+     "description": "Runs of the study with a Sandpiper (SingleM) community profile in the pinned Sandpiper snapshot (config Makefile SANDPIPER_VERSION / ZENODO_RECORD); 0 when the join table was not supplied"
+    },
+    {
+     "name": "library_strategies",
+     "type": "string",
+     "description": "JSON dict strategy → run count"
+    },
+    {
+     "name": "library_sources",
+     "type": "string",
+     "description": "';'-joined distinct library_source values"
+    },
+    {
+     "name": "instrument_platforms",
+     "type": "string",
+     "description": "';'-joined distinct instrument_platform values"
+    },
+    {
+     "name": "scientific_names_top",
+     "type": "string",
+     "description": "';'-joined top-5 scientific_name values with run counts, e.g. 'human gut metagenome (120)'"
+    },
+    {
+     "name": "host_tax_ids",
+     "type": "string",
+     "description": "';'-joined distinct host_tax_id values"
+    },
+    {
+     "name": "n_runs_host_9606",
+     "type": "int64",
+     "description": "Runs with host_tax_id 9606"
+    },
+    {
+     "name": "n_runs_nonhuman_host",
+     "type": "int64",
+     "description": "Runs with a non-9606 host_tax_id"
+    },
+    {
+     "name": "human_signal",
+     "type": "bool",
+     "description": "Frame-free sweep human-signal rule outcome (pre-filter)"
+    },
+    {
+     "name": "human_signal_rule",
+     "type": "string",
+     "description": "A|B|C|none — which human-signal rule fired",
+     "vocabulary": [
+      "A",
+      "B",
+      "C",
+      "none"
+     ]
+    },
+    {
+     "name": "ambiguous",
+     "type": "bool",
+     "description": "Human-signal rule tie flag"
+    },
+    {
+     "name": "host_human",
+     "type": "string",
+     "description": "Classified host",
+     "vocabulary": [
+      "yes",
+      "no",
+      "mixed",
+      "unknown"
+     ]
+    },
+    {
+     "name": "host_evidence",
+     "type": "string",
+     "description": "JSON list of {source, quote} (quote ≤ 12 words; source from the curation-skill label list)"
+    },
+    {
+     "name": "assay",
+     "type": "string",
+     "description": "Assay class (config/vocab/assay.yaml)",
+     "vocabulary_ref": "assay"
+    },
+    {
+     "name": "access",
+     "type": "string",
+     "description": "Access tier",
+     "vocabulary": [
+      "open",
+      "controlled",
+      "unknown"
+     ]
+    },
+    {
+     "name": "body_sites",
+     "type": "string",
+     "description": "';'-joined body-site codes (config/vocab/body_sites.yaml)",
+     "vocabulary_ref": "body_sites",
+     "multi": true
+    },
+    {
+     "name": "body_site_primary",
+     "type": "string",
+     "description": "Primary body-site code (multi_site when ≥ 3 strong sites)",
+     "vocabulary_ref": "body_sites",
+     "nullable": true
+    },
+    {
+     "name": "body_site_evidence",
+     "type": "string",
+     "description": "JSON evidence list"
+    },
+    {
+     "name": "life_stages",
+     "type": "string",
+     "description": "';'-joined life-stage codes (config/vocab/life_stages.yaml)",
+     "vocabulary_ref": "life_stages",
+     "multi": true
+    },
+    {
+     "name": "life_stage_primary",
+     "type": "string",
+     "description": "Primary life-stage code (mixed_ages when ≥ 3 strong stages)",
+     "vocabulary_ref": "life_stages",
+     "nullable": true
+    },
+    {
+     "name": "life_stage_evidence",
+     "type": "string",
+     "description": "JSON evidence list"
+    },
+    {
+     "name": "population_flags",
+     "type": "string",
+     "description": "';'-joined flags (config/vocab/population_flags.yaml)",
+     "vocabulary_ref": "population_flags",
+     "multi": true
+    },
+    {
+     "name": "health_context",
+     "type": "string",
+     "description": "≤ 120 chars free text or null",
+     "max_length": 120,
+     "nullable": true
+    },
+    {
+     "name": "classification_stage",
+     "type": "string",
+     "description": "Cascade stage that produced the classification",
+     "vocabulary": [
+      "deterministic_prior",
+      "deterministic_rule",
+      "sonnet_x2",
+      "opus_adjudicated",
+      "pending"
+     ]
+    },
+    {
+     "name": "classification_confidence",
+     "type": "float64",
+     "description": "0–1; minimum over components"
+    },
+    {
+     "name": "classification_model",
+     "type": "string",
+     "description": "'deterministic' or the resolved model id of the deciding stage"
+    },
+    {
+     "name": "in_infant_catalog",
+     "type": "string",
+     "description": "Infant-catalog verdict",
+     "vocabulary": [
+      "include",
+      "exclude",
+      "uncertain",
+      "not_screened"
+     ]
+    },
+    {
+     "name": "infant_reason_code",
+     "type": "string",
+     "description": "Infant triage reason_code (curation-skill vocabulary) or null",
+     "nullable": true
+    },
+    {
+     "name": "scope_memberships",
+     "type": "string",
+     "description": "';'-joined scope ids from config/scope.yaml",
+     "vocabulary_ref": "scopes",
+     "multi": true
+    },
+    {
+     "name": "universe_slice",
+     "type": "string",
+     "description": "Enumeration slice that found the study"
+    },
+    {
+     "name": "n_biosamples_harvested",
+     "type": "int64",
+     "description": "BioSamples of the study with a harvested attribute record (registry_biosamples); 0 = not harvested"
+    },
+    {
+     "name": "n_biosamples_with_site",
+     "type": "int64",
+     "description": "Harvested BioSamples with a body-site code other than unknown_site"
+    },
+    {
+     "name": "n_biosamples_with_age",
+     "type": "int64",
+     "description": "Harvested BioSamples with a life stage other than unknown_age"
+    },
+    {
+     "name": "n_biosamples_with_sex",
+     "type": "int64",
+     "description": "Harvested BioSamples with sex female/male"
+    },
+    {
+     "name": "sample_body_sites",
+     "type": "string",
+     "description": "JSON dict body_site_code → BioSample count (from registry_biosamples)"
+    },
+    {
+     "name": "sample_life_stages",
+     "type": "string",
+     "description": "JSON dict life_stage → BioSample count"
+    },
+    {
+     "name": "sample_countries",
+     "type": "string",
+     "description": "JSON dict ISO-3166 alpha-2 → BioSample count (top 5)"
+    },
+    {
+     "name": "sample_age_days_median",
+     "type": "float64",
+     "description": "Median age_days over harvested BioSamples with a numeric age"
+    },
+    {
+     "name": "release_added",
+     "type": "string",
+     "description": "Bitemporal: release id in which the row first appeared"
+    },
+    {
+     "name": "release_retired",
+     "type": "string",
+     "description": "Bitemporal: release id in which the row was retired; null = current",
+     "nullable": true
+    },
+    {
+     "name": "package_added",
+     "type": "string",
+     "description": "Bitemporal: package semver of first appearance"
+    }
+   ],
+   "bitemporal": "release columns appended at the end in releases.yaml order; built_with_release_columns: true"
+  },
+  "registry_runs.parquet": {
+   "key": [
+    "run_accession"
+   ],
+   "one_row_per": "ENA read_run in the registry universe",
+   "storage": "single working_data artifact (≈1.5M rows); columns restricted to the pull fields",
+   "columns": [
+    {
+     "name": "run_accession",
+     "type": "string",
+     "description": "ENA read_run field run_accession"
+    },
+    {
+     "name": "study_accession",
+     "type": "string",
+     "description": "ENA read_run field study_accession"
+    },
+    {
+     "name": "secondary_study_accession",
+     "type": "string",
+     "description": "ENA read_run field secondary_study_accession"
+    },
+    {
+     "name": "sample_accession",
+     "type": "string",
+     "description": "ENA read_run field sample_accession"
+    },
+    {
+     "name": "secondary_sample_accession",
+     "type": "string",
+     "description": "ENA read_run field secondary_sample_accession"
+    },
+    {
+     "name": "experiment_accession",
+     "type": "string",
+     "description": "ENA read_run field experiment_accession"
+    },
+    {
+     "name": "library_strategy",
+     "type": "string",
+     "description": "ENA read_run field library_strategy"
+    },
+    {
+     "name": "library_source",
+     "type": "string",
+     "description": "ENA read_run field library_source"
+    },
+    {
+     "name": "library_selection",
+     "type": "string",
+     "description": "ENA read_run field library_selection"
+    },
+    {
+     "name": "library_layout",
+     "type": "string",
+     "description": "ENA read_run field library_layout"
+    },
+    {
+     "name": "library_name",
+     "type": "string",
+     "description": "ENA read_run field library_name"
+    },
+    {
+     "name": "target_gene",
+     "type": "string",
+     "description": "ENA read_run field target_gene"
+    },
+    {
+     "name": "instrument_platform",
+     "type": "string",
+     "description": "ENA read_run field instrument_platform"
+    },
+    {
+     "name": "instrument_model",
+     "type": "string",
+     "description": "ENA read_run field instrument_model"
+    },
+    {
+     "name": "read_count",
+     "type": "string",
+     "description": "ENA read_run field read_count"
+    },
+    {
+     "name": "base_count",
+     "type": "string",
+     "description": "ENA read_run field base_count"
+    },
+    {
+     "name": "nominal_length",
+     "type": "string",
+     "description": "ENA read_run field nominal_length"
+    },
+    {
+     "name": "tax_id",
+     "type": "string",
+     "description": "ENA read_run field tax_id"
+    },
+    {
+     "name": "scientific_name",
+     "type": "string",
+     "description": "ENA read_run field scientific_name"
+    },
+    {
+     "name": "host_tax_id",
+     "type": "string",
+     "description": "ENA read_run field host_tax_id"
+    },
+    {
+     "name": "host_scientific_name",
+     "type": "string",
+     "description": "ENA read_run field host_scientific_name"
+    },
+    {
+     "name": "host_body_site",
+     "type": "string",
+     "description": "ENA read_run field host_body_site"
+    },
+    {
+     "name": "host_status",
+     "type": "string",
+     "description": "ENA read_run field host_status"
+    },
+    {
+     "name": "host_phenotype",
+     "type": "string",
+     "description": "ENA read_run field host_phenotype"
+    },
+    {
+     "name": "age",
+     "type": "string",
+     "description": "ENA read_run field age"
+    },
+    {
+     "name": "dev_stage",
+     "type": "string",
+     "description": "ENA read_run field dev_stage"
+    },
+    {
+     "name": "disease",
+     "type": "string",
+     "description": "ENA read_run field disease"
+    },
+    {
+     "name": "country",
+     "type": "string",
+     "description": "ENA read_run field country"
+    },
+    {
+     "name": "first_public",
+     "type": "string",
+     "description": "ENA read_run field first_public"
+    },
+    {
+     "name": "center_name",
+     "type": "string",
+     "description": "ENA read_run field center_name"
+    },
+    {
+     "name": "project_name",
+     "type": "string",
+     "description": "ENA read_run field project_name"
+    },
+    {
+     "name": "study_title",
+     "type": "string",
+     "description": "ENA read_run field study_title"
+    },
+    {
+     "name": "sample_title",
+     "type": "string",
+     "description": "ENA read_run field sample_title"
+    },
+    {
+     "name": "serovar",
+     "type": "string",
+     "description": "ENA read_run field serovar"
+    },
+    {
+     "name": "sub_species",
+     "type": "string",
+     "description": "ENA read_run field sub_species"
+    },
+    {
+     "name": "strain",
+     "type": "string",
+     "description": "ENA read_run field strain"
+    },
+    {
+     "name": "isolate",
+     "type": "string",
+     "description": "ENA read_run field isolate"
+    },
+    {
+     "name": "checklist",
+     "type": "string",
+     "description": "ENA read_run field checklist"
+    },
+    {
+     "name": "environmental_medium",
+     "type": "string",
+     "description": "ENA read_run field environmental_medium"
+    },
+    {
+     "name": "isolation_source",
+     "type": "string",
+     "description": "ENA read_run field isolation_source"
+    },
+    {
+     "name": "experimental_factor",
+     "type": "string",
+     "description": "ENA read_run field experimental_factor"
+    },
+    {
+     "name": "extraction_protocol",
+     "type": "string",
+     "description": "ENA read_run field extraction_protocol"
+    },
+    {
+     "name": "environmental_sample",
+     "type": "string",
+     "description": "ENA read_run field environmental_sample"
+    },
+    {
+     "name": "found_by",
+     "type": "string",
+     "description": "Enumeration slice tag that pulled the run"
+    },
+    {
+     "name": "release_added",
+     "type": "string",
+     "description": "Bitemporal"
+    },
+    {
+     "name": "release_retired",
+     "type": "string",
+     "description": "Bitemporal; null = current",
+     "nullable": true
+    },
+    {
+     "name": "package_added",
+     "type": "string",
+     "description": "Bitemporal"
+    }
+   ]
+  },
+  "registry_universe_audit.csv": {
+   "key": [
+    "slice"
+   ],
+   "one_row_per": "enumeration slice",
+   "columns": [
+    {
+     "name": "slice",
+     "type": "string",
+     "description": "Slice tag / ENA query label"
+    },
+    {
+     "name": "ena_query",
+     "type": "string",
+     "description": "ENA portal query string"
+    },
+    {
+     "name": "ena_count",
+     "type": "int64",
+     "description": "Count returned by the ENA count endpoint"
+    },
+    {
+     "name": "rows_pulled",
+     "type": "int64",
+     "description": "read_run rows actually streamed"
+    },
+    {
+     "name": "n_studies",
+     "type": "int64",
+     "description": "Distinct studies in the slice"
+    },
+    {
+     "name": "completeness",
+     "type": "float64",
+     "description": "rows_pulled / ena_count"
+    },
+    {
+     "name": "pulled_at",
+     "type": "string",
+     "description": "ISO timestamp of the pull"
+    }
+   ]
+  },
+  "registry_biosamples.parquet": {
+   "key": [
+    "sample_accession"
+   ],
+   "one_row_per": "harvested BioSample of a registry study (S2: human_all studies outside the curated infant catalog)",
+   "columns": [
+    {
+     "name": "sample_accession",
+     "type": "string",
+     "description": "BioSample accession (SAMN/SAME/SAMD) as listed in registry_biosample_index; primary key",
+     "key": true
+    },
+    {
+     "name": "study_accession",
+     "type": "string",
+     "description": "ENA study (BioProject) the sample belongs to"
+    },
+    {
+     "name": "n_attributes",
+     "type": "int64",
+     "description": "Non-placeholder attribute rows harvested for the sample"
+    },
+    {
+     "name": "source",
+     "type": "string",
+     "description": "ena_xml | ncbi_biosample — where the attribute record came from"
+    },
+    {
+     "name": "body_site_code",
+     "type": "string",
+     "description": "config/vocab/body_sites.yaml code from the normalised body-site attribute; unknown_site when an attribute existed but mapped to no site; null when no body-site attribute"
+    },
+    {
+     "name": "body_site_raw_key",
+     "type": "string",
+     "description": "Normalised attribute key the code came from (e.g. host_body_site, isolation_source)"
+    },
+    {
+     "name": "body_site_raw_value",
+     "type": "string",
+     "description": "Raw attribute value the code came from"
+    },
+    {
+     "name": "life_stage",
+     "type": "string",
+     "description": "config/vocab/life_stages.yaml code from the age attribute (or from age_days); unknown_age when an age attribute existed but was not interpretable; null when none"
+    },
+    {
+     "name": "age_days",
+     "type": "float64",
+     "description": "Age at collection in days when a numeric age with unit was given"
+    },
+    {
+     "name": "age_raw_key",
+     "type": "string",
+     "description": "Attribute key the age came from"
+    },
+    {
+     "name": "age_raw_value",
+     "type": "string",
+     "description": "Raw age value"
+    },
+    {
+     "name": "sex",
+     "type": "string",
+     "description": "female | male | unknown; null when no sex attribute"
+    },
+    {
+     "name": "sex_raw_key",
+     "type": "string",
+     "description": "Attribute key the sex came from"
+    },
+    {
+     "name": "sex_raw_value",
+     "type": "string",
+     "description": "Raw sex/gender value"
+    },
+    {
+     "name": "country_iso2",
+     "type": "string",
+     "description": "ISO-3166-1 alpha-2 from geo_loc_name / country attributes"
+    },
+    {
+     "name": "country_raw_key",
+     "type": "string",
+     "description": "Attribute key the country came from"
+    },
+    {
+     "name": "country_raw_value",
+     "type": "string",
+     "description": "Raw geographic value"
+    },
+    {
+     "name": "collection_date_raw",
+     "type": "string",
+     "description": "Raw collection date attribute"
+    },
+    {
+     "name": "collection_year",
+     "type": "Int64",
+     "description": "Year extracted from collection_date_raw"
+    },
+    {
+     "name": "disease_raw",
+     "type": "string",
+     "description": "First non-placeholder disease/health/phenotype attribute value (≤200 chars; NOT normalised — no controlled vocabulary yet)"
+    },
+    {
+     "name": "release_added",
+     "type": "string",
+     "description": "Release id in which the row first appeared"
+    },
+    {
+     "name": "release_retired",
+     "type": "string",
+     "description": "Release id in which the row was retired (null = current)"
+    },
+    {
+     "name": "package_added",
+     "type": "string",
+     "description": "Package version that first carried the row"
+    }
+   ],
+   "bitemporal": "release columns written by build_biosamples; normalisation map = utility-model pass over distinct (key,value) pairs (docs/REGISTRY_S2_PILOT.md, config/budgets.yaml registry_s2)"
+  },
+  "registry_study_papers.parquet": {
+   "key": [
+    "study_accession",
+    "paper_id"
+   ],
+   "one_row_per": "study × linked paper (accession mention in Europe PMC and/or publication declared in the NCBI BioProject record); 4,217 human_all studies outside the curated infant catalog",
+   "columns": [
+    {
+     "name": "study_accession",
+     "type": "str",
+     "description": "ENA study (BioProject) accession",
+     "key": true
+    },
+    {
+     "name": "paper_id",
+     "type": "str",
+     "description": "Europe PMC id (MED:<pmid> | PMC… | PPR… | DOI:…); part of the key",
+     "key": true
+    },
+    {
+     "name": "pmid",
+     "type": "str",
+     "description": "PubMed id of the linked paper"
+    },
+    {
+     "name": "pmcid",
+     "type": "str",
+     "description": "PubMed Central id"
+    },
+    {
+     "name": "doi",
+     "type": "str",
+     "description": "DOI"
+    },
+    {
+     "name": "title",
+     "type": "str",
+     "description": "Paper title"
+    },
+    {
+     "name": "journal",
+     "type": "str",
+     "description": "Journal"
+    },
+    {
+     "name": "year",
+     "type": "Int64",
+     "description": "Publication year"
+    },
+    {
+     "name": "pub_type",
+     "type": "str",
+     "description": "Europe PMC publication types"
+    },
+    {
+     "name": "is_open_access",
+     "type": "boolean",
+     "description": "Europe PMC open-access flag"
+    },
+    {
+     "name": "in_epmc_fulltext",
+     "type": "object",
+     "description": "Full text available in Europe PMC"
+    },
+    {
+     "name": "source",
+     "type": "str",
+     "description": "europepmc_mention | bioproject_xml | both — how the paper was linked"
+    },
+    {
+     "name": "match_field",
+     "type": "str",
+     "description": "abstract_or_title | fulltext_only — where the accession was mentioned"
+    },
+    {
+     "name": "match_accession",
+     "type": "str",
+     "description": "Accession matched (primary PRJ… or secondary ERP/SRP/DRP)"
+    },
+    {
+     "name": "bioproject_declared",
+     "type": "bool",
+     "description": "Paper is listed as a publication in the NCBI BioProject record"
+    },
+    {
+     "name": "n_registry_studies",
+     "type": "int64",
+     "description": "How many processed registry studies this paper mentions"
+    },
+    {
+     "name": "relation",
+     "type": "str",
+     "description": "data_paper | related | unsure — deterministic link class (see REGISTRY_S2_PAPERS.md §2.3)"
+    },
+    {
+     "name": "method",
+     "type": "str",
+     "description": "Rule that produced the relation (det_bioproject_declared 0.9, det_single_mention_abstract 0.75, det_single_mention_fulltext 0.6)"
+    },
+    {
+     "name": "confidence",
+     "type": "float64",
+     "description": "Rule confidence (null for unsure)"
+    },
+    {
+     "name": "contested",
+     "type": "bool",
+     "description": "True when the paper mentions ≥ 2 processed studies"
+    },
+    {
+     "name": "contest_reason",
+     "type": "str",
+     "description": "multi_study | …"
+    },
+    {
+     "name": "epmc_rank",
+     "type": "float64",
+     "description": "Rank of the paper in the Europe PMC hit list for the study"
+    },
+    {
+     "name": "epmc_hit_count",
+     "type": "float64",
+     "description": "Europe PMC hitCount for the study query"
+    },
+    {
+     "name": "epmc_hits_capped",
+     "type": "object",
+     "description": "Hit list truncated at 300 (never true in R2026.5)"
+    },
+    {
+     "name": "body_site_primary",
+     "type": "str",
+     "description": "registry_studies.body_site_primary at harvest time (convenience)"
+    },
+    {
+     "name": "release_added",
+     "type": "string",
+     "description": "Release id in which the row first appeared"
+    },
+    {
+     "name": "release_retired",
+     "type": "string",
+     "description": "Release id in which the row was retired (null = current)"
+    },
+    {
+     "name": "package_added",
+     "type": "string",
+     "description": "Package version that first carried the row"
+    }
+   ],
+   "bitemporal": "release columns appended by catalog.registry.add_registry_tables (harvest 2026-09-27, docs/REGISTRY_S2_PAPERS.md)"
+  },
+  "registry_bioproject_records.parquet": {
+   "key": [
+    "study_accession"
+   ],
+   "one_row_per": "processed registry study (NCBI BioProject XML)",
+   "columns": [
+    {
+     "name": "study_accession",
+     "type": "str",
+     "description": "ENA study (BioProject) accession",
+     "key": true
+    },
+    {
+     "name": "secondary_study_accession",
+     "type": "str",
+     "description": "ENA secondary study accession"
+    },
+    {
+     "name": "found_in_ncbi",
+     "type": "bool",
+     "description": "BioProject record found via esearch"
+    },
+    {
+     "name": "bioproject_uid",
+     "type": "str",
+     "description": "NCBI BioProject UID"
+    },
+    {
+     "name": "archive",
+     "type": "str",
+     "description": "NCBI | EBI | DDBJ"
+    },
+    {
+     "name": "center_id",
+     "type": "str",
+     "description": "Submitting center id"
+    },
+    {
+     "name": "center_id_center",
+     "type": "str",
+     "description": "Center attribute of center_id"
+    },
+    {
+     "name": "title",
+     "type": "str",
+     "description": "Paper title"
+    },
+    {
+     "name": "name",
+     "type": "str",
+     "description": "BioProject name"
+    },
+    {
+     "name": "organisation",
+     "type": "str",
+     "description": "Submitting organisation (first)"
+    },
+    {
+     "name": "submitter_owner",
+     "type": "str",
+     "description": "Submitter/owner organisation"
+    },
+    {
+     "name": "organizations_json",
+     "type": "str",
+     "description": "JSON list of organisations (name, abbr, role)"
+    },
+    {
+     "name": "n_publications",
+     "type": "float64",
+     "description": "Publications declared in the record"
+    },
+    {
+     "name": "publication_pmids",
+     "type": "str",
+     "description": "; -joined PMIDs declared"
+    },
+    {
+     "name": "publication_dois",
+     "type": "str",
+     "description": "; -joined DOIs declared"
+    },
+    {
+     "name": "publications_json",
+     "type": "str",
+     "description": "JSON list of declared publications"
+    },
+    {
+     "name": "grants_json",
+     "type": "str",
+     "description": "JSON list of grants"
+    },
+    {
+     "name": "external_links_json",
+     "type": "str",
+     "description": "JSON list of external links"
+    },
+    {
+     "name": "registration_date",
+     "type": "str",
+     "description": "ProjectReleaseDate when present (239 studies)"
+    },
+    {
+     "name": "submitted",
+     "type": "str",
+     "description": "Submission date"
+    },
+    {
+     "name": "last_update",
+     "type": "str",
+     "description": "Last update date"
+    },
+    {
+     "name": "submission_access",
+     "type": "str",
+     "description": "public | controlled"
+    },
+    {
+     "name": "data_types",
+     "type": "str",
+     "description": "Declared data types"
+    },
+    {
+     "name": "target_material",
+     "type": "str",
+     "description": "BioProject target material (eGenome, …)"
+    },
+    {
+     "name": "target_capture",
+     "type": "str",
+     "description": "Target capture (eWhole, …)"
+    },
+    {
+     "name": "target_sample_scope",
+     "type": "str",
+     "description": "Sample scope (eMultiisolate, eEnvironment, …)"
+    },
+    {
+     "name": "method_type",
+     "type": "str",
+     "description": "Method type (eSequencing, …)"
+    },
+    {
+     "name": "relevance_medical",
+     "type": "str",
+     "description": "Medical relevance flag"
+    },
+    {
+     "name": "body_site_primary",
+     "type": "str",
+     "description": "registry_studies.body_site_primary at harvest time (convenience)"
+    },
+    {
+     "name": "release_added",
+     "type": "string",
+     "description": "Release id in which the row first appeared"
+    },
+    {
+     "name": "release_retired",
+     "type": "string",
+     "description": "Release id in which the row was retired (null = current)"
+    },
+    {
+     "name": "package_added",
+     "type": "string",
+     "description": "Package version that first carried the row"
+    }
+   ],
+   "bitemporal": "release columns appended by catalog.registry.add_registry_tables (harvest 2026-09-27, docs/REGISTRY_S2_PAPERS.md)"
+  },
+  "registry_authors.parquet": {
+   "key": [
+    "study_accession",
+    "pmid",
+    "position"
+   ],
+   "one_row_per": "study × paper × author (Europe PMC core records of ≤ 5 linked papers per study)",
+   "columns": [
+    {
+     "name": "study_accession",
+     "type": "str",
+     "description": "ENA study (BioProject) accession",
+     "key": true
+    },
+    {
+     "name": "author_full_name",
+     "type": "str",
+     "description": "Author full name (Europe PMC)"
+    },
+    {
+     "name": "author_display",
+     "type": "str",
+     "description": "Surname + initials"
+    },
+    {
+     "name": "author_surname",
+     "type": "str",
+     "description": "Surname"
+    },
+    {
+     "name": "author_initials",
+     "type": "str",
+     "description": "Initials"
+    },
+    {
+     "name": "is_group",
+     "type": "bool",
+     "description": "Collective/group author"
+    },
+    {
+     "name": "source",
+     "type": "str",
+     "description": "europepmc_mention | bioproject_xml | both — how the paper was linked"
+    },
+    {
+     "name": "pmid",
+     "type": "str",
+     "description": "PubMed id of the linked paper",
+     "key": true
+    },
+    {
+     "name": "pmcid",
+     "type": "str",
+     "description": "PubMed Central id"
+    },
+    {
+     "name": "doi",
+     "type": "str",
+     "description": "DOI"
+    },
+    {
+     "name": "paper_title",
+     "type": "str",
+     "description": "Paper title"
+    },
+    {
+     "name": "pub_year",
+     "type": "Int64",
+     "description": "Publication year"
+    },
+    {
+     "name": "position",
+     "type": "int64",
+     "description": "Author position (1 = first); part of the key",
+     "key": true
+    },
+    {
+     "name": "n_authors",
+     "type": "int64",
+     "description": "Authors on the paper"
+    },
+    {
+     "name": "is_first",
+     "type": "bool",
+     "description": "First author"
+    },
+    {
+     "name": "is_last",
+     "type": "bool",
+     "description": "Last author"
+    },
+    {
+     "name": "affiliation",
+     "type": "str",
+     "description": "Affiliation string (e-mail addresses removed, rule F7)"
+    },
+    {
+     "name": "orcid",
+     "type": "str",
+     "description": "ORCID iD when present"
+    },
+    {
+     "name": "paper_relation",
+     "type": "str",
+     "description": "relation of the study×paper link (registry_study_papers)"
+    },
+    {
+     "name": "link_method",
+     "type": "str",
+     "description": "method of the link"
+    },
+    {
+     "name": "author_source",
+     "type": "str",
+     "description": "europepmc_core"
+    },
+    {
+     "name": "author_key",
+     "type": "str",
+     "description": "lower-case surname + initials key for de-duplication"
+    },
+    {
+     "name": "release_added",
+     "type": "string",
+     "description": "Release id in which the row first appeared"
+    },
+    {
+     "name": "release_retired",
+     "type": "string",
+     "description": "Release id in which the row was retired (null = current)"
+    },
+    {
+     "name": "package_added",
+     "type": "string",
+     "description": "Package version that first carried the row"
+    }
+   ],
+   "bitemporal": "release columns appended by catalog.registry.add_registry_tables (harvest 2026-09-27, docs/REGISTRY_S2_PAPERS.md)"
+  }
+ }
+}

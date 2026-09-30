@@ -1,5 +1,5 @@
 # A1: uploads.github.com (Release asset upload) is on the sandbox's non-grantable denylist, so the agent never
-# uploads assets. It pushes a tag `data-v<semver>` to the DATA repo (OlmLab/infant-gut-catalog-data); this workflow
+# uploads assets. It pushes a tag `data-v<semver>` to the DATA repo (OlmLab/microbiome_repo-data); this workflow
 # builds the zip + SQLite on GitHub's side and attaches them with softprops/action-gh-release using GITHUB_TOKEN.
 # Zenodo DOI: enable the Zenodo↔GitHub integration on the data repo once; every published Release then mints a DOI.
 name: release
@@ -50,8 +50,13 @@ jobs:
           import glob, os, sqlite3, pandas as pd, json
           V = json.load(open("package/VERSION.json"))["package_version"]
           con = sqlite3.connect(f"infant_catalog_v{V}.sqlite")
+          # 1.12.0: the two largest fact tables (gut_sample_determinations 3.1 M rows, gut_runs 0.7 M rows) push the SQLite past the
+          # 2 GiB release-asset limit (data-v1.12.0 upload failed twice); they stay parquet-only, everything else is loaded.
+          SKIP = {"gut_sample_determinations", "gut_runs"}
           for f in sorted(glob.glob("package/*.parquet")):
               t = os.path.basename(f)[:-8]
+              if t in SKIP:
+                  print("skip (parquet only)", t); continue
               pd.read_parquet(f).to_sql(t, con, if_exists="replace", index=False)
               print("table", t)
           for f in sorted(glob.glob("package/*.csv")):
@@ -61,7 +66,22 @@ jobs:
           con.commit(); con.close()
           EOF
           ls -la *.zip *.sqlite
+          # never hand softprops a file above the 2 GiB asset limit — drop the SQLite instead of failing the release
+          find . -maxdepth 1 -name "*.sqlite" -size +1900M -print -delete
           sha256sum *.zip *.sqlite > SHA256SUMS.txt
+      - name: Fetch large release assets (orphan branch release-assets — single commit, no history)
+        run: |
+          rm -rf assets
+          if git ls-remote --exit-code --heads origin release-assets >/dev/null 2>&1; then
+            git fetch --depth 1 origin release-assets
+            git checkout FETCH_HEAD -- assets
+            V=$(python -c "import json;print(json.load(open('package/VERSION.json'))['package_version'])")
+            if [ "$(cat assets/ASSETS_VERSION.txt 2>/dev/null)" != "$V" ]; then echo "release-assets branch is for $(cat assets/ASSETS_VERSION.txt), not $V — not attached"; rm -rf assets; fi
+            git reset -q -- assets 2>/dev/null || true
+          else
+            echo "no release-assets branch"
+          fi
+          ls -la assets 2>/dev/null || true
       - name: Attach assets to the GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -74,4 +94,4 @@ jobs:
             SHA256SUMS.txt
             package/VERSION.json
             assets/*
-          fail_on_unmatched_files: false   # assets/ (e.g. registry_runs_v*.parquet, ≈70 MB) exists from 1.6.0 on
+          fail_on_unmatched_files: false   # assets/ comes from the release-assets orphan branch (Sandpiper long tables, registry_runs); absent on older tags
